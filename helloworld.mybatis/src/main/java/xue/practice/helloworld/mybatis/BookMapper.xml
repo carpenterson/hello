@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="xue.practice.helloworld.mybatis.BookMapper">
+
+	<select id="getBook" resultType="xue.practice.helloworld.mybatis.Book" >
+		select * from book
+	</select>
+	
+	<select id="getBookByID" resultType="xue.practice.helloworld.mybatis.Book" >
+		select * from book where id in
+		<!-- 把List作为参数对象传递给Mybatis，Mybatis会把参数包装在一个Map中，并且以list为键-->
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
+
+</mapper>

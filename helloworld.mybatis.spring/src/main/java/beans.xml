@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<context:component-scan base-package="xue.*" />
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="org.sqlite.JDBC" />
+		<property name="jdbcUrl" value="jdbc:sqlite:mydb.db" />
+		<property name="user" value="" />
+		<property name="password" value="" />
+	</bean>
+	<bean id="dataSource2" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="org.sqlite.JDBC" />
+		<property name="jdbcUrl" value="jdbc:sqlite:mydb2.db" />
+		<property name="user" value="" />
+		<property name="password" value="" />
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- 如果 XML 文件在类路径的 位置和映射器类相同时, 它会被 MapperFactoryBean 自动解析。 没有必要在 MyBatis 
+			配置文 件 中 去 指 定 映 射 器 , 除 非 映 射 器的 XML 文 件 在 不 同 的 类 路 径 下 -->
+		<!-- <property name="mapperLocations" value="classpath*:xue/practice/mybatis/**/*.xml" 
+			/> -->
+	</bean>
+
+	<bean id="sqlSessionFactory2" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource2" />
+	</bean>
+	
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="transactionManager2"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource2" />
+	</bean>
+
+	<bean id="deptMapper1" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="xue.practice.helloworld.mybatis.spring.BookMapper1" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="deptMapper2" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="xue.practice.helloworld.mybatis.spring.BookMapper2" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory2" />
+	</bean>
+
+	<!-- 用注解的方式来开启事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+</beans>
