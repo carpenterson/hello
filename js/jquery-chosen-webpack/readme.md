@@ -46,7 +46,7 @@ output: {
 },
 
 配置HtmlWebpackPlugin
-npm install --save-dev HtmlWebpackPlugin
+npm install --save-dev html-webpack-plugin
 指定模板
 new HtmlWebpackPlugin({
     title: 'Output Management',
@@ -55,7 +55,7 @@ new HtmlWebpackPlugin({
 
 
 配置CleanWebpackPlugin
-npm install --save-dev CleanWebpackPlugin
+npm install --save-dev clean-webpack-plugin
 指定要清理的文件夹
 new CleanWebpackPlugin(['build']),
 
