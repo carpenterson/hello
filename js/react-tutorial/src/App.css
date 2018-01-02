@@ -1,0 +1,18 @@
+.square {
+    border: 1px solid black;
+    text-align: center;
+    line-height: 50px;
+    float: left;
+    height: 50px;
+    width: 50px;
+}
+
+#board {
+    width: 156px;
+    height: 156px;
+    float: left;
+}
+
+#info-area{
+    margin-left: 156px;
+}
