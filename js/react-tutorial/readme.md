@@ -65,3 +65,4 @@ http://zh.learnlayout.com/
 
 ## 3、把要修改的数据作为state
 
+## 4、加上事件处理

@@ -8,6 +8,7 @@
 }
 
 #board {
+    border: 1px solid black;
     width: 156px;
     height: 156px;
     float: left;
@@ -15,4 +16,8 @@
 
 #info-area{
     margin-left: 156px;
+}
+
+#history ul{
+    list-style-type: disc
 }
