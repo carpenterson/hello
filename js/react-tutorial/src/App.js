@@ -12,7 +12,7 @@ class Game extends Component {
         this.handleClickBoard = this.handleClickBoard.bind(this);
         this.handleClickHistory = this.handleClickHistory.bind(this);
         this.state = {
-            hisotryList: [[null, null, null, null, null, null, null, null, null]], // 初始状态，在历史栏上不展示
+            hisotryList: [Array(9).fill(null)], // 初始状态，在历史栏上不展示
             currentStep: 1  // 当前要走的是第1步
         }
     }
@@ -56,7 +56,7 @@ class Game extends Component {
         const winLine = findWinLine(currentValues);
         let info;
         if (winLine) {
-            info = currentValues[winLine[0]] + ' wins!';
+            info = 'Winner: ' + currentValues[winLine[0]];
         } else {
             const nextPlayer = currentStep % 2 == 1 ? 'X' : 'O'; // X先走
             info = 'Next player: ' + nextPlayer;
@@ -132,16 +132,24 @@ class HistoryList extends Component {
 
     render() {
         const steps = [];
-        steps[0] = <li onClick={() => this.props.onClickHistory(0)}>Start</li>
+        steps[0] = (<li >
+            <button onClick={() => this.props.onClickHistory(0)}>
+                Go to game start
+            </button>
+        </li>);
         for (let step = 0; step < this.props.steps; step++) {
-            steps[step+1] = <li key={step} onClick={() => this.props.onClickHistory(step + 1)}>step {step + 1}</li>;
+            steps[step + 1] = (<li>
+                <button key={step} onClick={() => this.props.onClickHistory(step + 1)}>
+                    Go to move #{step + 1}
+                </button>
+            </li>);
         }
 
         return (
             <div id="hisotry">
-                <ul>
+                <ol>
                     {steps}
-                </ul>
+                </ol>
             </div>
         );
     }

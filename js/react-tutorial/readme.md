@@ -66,3 +66,15 @@ http://zh.learnlayout.com/
 ## 3、把要修改的数据作为state
 
 ## 4、加上事件处理
+
+
+# 对比官网教程中的代码
+https://codepen.io/gaearon/pen/gWWZgR?editors=0010
+
+1. 标题叫做Tic Tac Toe
+2. 页面布局用了flex
+3. 历史记录列表，在li中套了button，更好看 
+4. 新建一个有初始值的空数组：Array(9).fill(null)
+
+# TODO
+1. flex布局

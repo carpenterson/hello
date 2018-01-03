@@ -1,5 +1,8 @@
+
+
 .square {
     border: 1px solid black;
+    font: 25px bold, sans-serif;
     text-align: center;
     line-height: 50px;
     float: left;
@@ -19,5 +22,6 @@
 }
 
 #history ul{
+    padding-left: 30px;
     list-style-type: disc
 }
