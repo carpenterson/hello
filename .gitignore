@@ -1,0 +1,11 @@
+*.gitignore
+/js/*/node_modules
+/js/*/build
+/js/*/.vscode
+/java/*/*.classpath
+/java/*/.project
+/java/*/.settings
+/java/*/.classpath
+/java/*/.project
+/java/*/target
+
