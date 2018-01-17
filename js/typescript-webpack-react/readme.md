@@ -21,18 +21,16 @@ typescript本身就可以翻译JSX
 TypeScript的JSX配置  
 http://www.typescriptlang.org/docs/handbook/jsx.html  
 
-Markdown语法说明书  
-http://wowubuntu.com/markdown/#list
-
-
 # 详细步骤
 
 ## 1.安装package
-`npm init -y`  
-`npm install --save react react-dom @types/react @types/react-dom`  
-`npm install --save-dev typescript awesome-typescript-loader source-map-loader`  
-`npm install --save-dev babel-loader babel-core babel-preset-es2015  babel-preset-react`  
-`npm install --save-dev webpack html-webpack-plugin clean-webpack-plugin style-loader css-loader webpack-dev-server`   
+```
+npm init -y 
+npm install --save react react-dom @types/react @types/react-dom
+npm install --save-dev typescript awesome-typescript-loader source-map-loader
+npm install --save-dev babel-loader babel-core babel-preset-es2015  babel-preset-react
+npm install --save-dev webpack html-webpack-plugin clean-webpack-plugin style-loader css-loader webpack-dev-server
+``` 
 
 ## 2.建目录结构
 
