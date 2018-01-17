@@ -1,6 +1,7 @@
 *.gitignore
 /js/*/node_modules
 /js/*/build
+/js/*/dist
 /js/*/.vscode
 /java/*/.project
 /java/*/.settings
