@@ -13,12 +13,15 @@ npm install --save-dev webpack webpack-dev-server html-webpack-plugin clean-webp
 npm install --save react react-dom
 npm install --save-dev babel-loader babel-core babel-preset-es2015  babel-preset-react
 ```
+1. 没有使用less-loader
+2. 没有使用babel-preset-stage-0，所以代码中不能写`f=()=>{}`这种格式的代码
 
 ## 2、创建目录结构
 ```bat
 mkdir src
 mkdir build
 type nul>webpack.config.js
+type nul>readme.md
 cd src
 type nul>index.html
 type nul>index.js
