@@ -1,4 +1,4 @@
-代码分离
+官方教程的例子。通过CommonsChunkPlugin把代码分块打包。
 
 https://webpack.js.org/guides/code-splitting/
 

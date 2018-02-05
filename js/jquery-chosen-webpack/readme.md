@@ -2,14 +2,33 @@
 
 参考文章：https://segmentfault.com/a/1190000006887523
 
-如果jquery插件中把jQuery作为全局变量引用，可以通过ProvidePlugin来解决
+## 详细步骤
+
+##### 在js代码中引用jquery和chosen-js
+```
+import $ from "jquery";
+import "chosen-js";
+```
+
+##### 使用jquery插件的api
+```
+$('.chosen-select' ).chosen();
+```
+
+* 此时打包后在浏览器中看到报错：**jQuery找不到**  
+原因：chosen-js插件中直接引用了jQuery变量，但是这个变量并不是全局的，所以它找不到  
+
+
+##### 配置ProvidePlugin
 ```
 new webpack.ProvidePlugin(
 {
     jQuery: 'jquery'
 }
 ```
-ProvidePlugin的机制：当webpack加载到某个js模块里，出现了未定义且名称符合（字符串完全匹配）配置中的key的变量时，会自动require配置中的value所指定的js模块
+
+##### ProvidePlugin的机制
+当webpack加载到某个js模块里，出现了未定义且名称符合（字符串完全匹配）配置中的变量（jQuery）时，会自动require所指定的js模块(jquery)  
 
 同理，如果引用的是$，则配置为
 ```
@@ -19,7 +38,7 @@ new webpack.ProvidePlugin(
 }
 ```
 
-或者，配置为
+万全的配置为
 ```
 new webpack.ProvidePlugin(
 {
@@ -31,130 +50,14 @@ new webpack.ProvidePlugin(
 ```
 
 
-# 详细步骤
-
-##### 1、安装插件
+##### 样式  
+需要引入chosen自带的css，才能实现最后的效果
 ```
-npm install jquery --save
-npm install chosen-js --save
+import '../node_modules/chosen-js/chosen.css';
 ```
 
-##### 2、配置webpack
-新建src和build目录, 新建webpack.config.js文件
 
-* 配置entry
-```js
-entry: './src/index.js',
-```
-
-* 配置output
-```js
-output: {
-    path: path.resolve(__dirname, 'build'),
-    filename: 'bundle.js',
-},
-```
-
-* 配置HtmlWebpackPlugin
-```
-npm install --save-dev html-webpack-plugin
-```
-指定模板
-```js
-new HtmlWebpackPlugin({
-    title: 'Output Management',
-    template: 'src/index.html'
-}),
-```
-
-* 配置CleanWebpackPlugin
-``
-npm install --save-dev clean-webpack-plugin
-```
-指定要清理的文件夹
-``` js
-new CleanWebpackPlugin(['build']),
-```
-
-##### 3、写html
-在src目录下新建index.html
-在html中加一个select，用做测试
-
-##### 4、写js
-在src目录下新建index.js
-
-在其中引用jquery和chosen-js
-```
-import $ from "jquery";
-import "chosen-js";
-```
-
-使用jquery插件的api
-```
-$('.chosen-select' ).chosen();
-```
-
-* 此时效果  
-用webpack命令打包  
-在浏览器中打开build/index.html，按F12会看到报错信息：jQuery找不到  
-原因：chosen-js插件中直接引用了jQuery变量，但是这个变量并不是全局的，所以它找不到  
-
-
-##### 5、配置ProvidePlugin
-```
-new webpack.ProvidePlugin(
-{
-    jQuery: 'jquery'
-}
-```
-
-ProvidePlugin的机制：当webpack加载到某个js模块里，出现了未定义且名称符合（字符串完全匹配）配置中的key的变量时，会自动require配置中的value所指定的js模块
-
-* 此时效果  
-在浏览器中可以看到chosen插件起作用了。到此已经知道了jquery插件的用法。
-在这一步中，看到的样式是不对的，因为我们还没有引入chosen自带的css
-
-##### 6、引入css
-* 安装css-loader
-```
-npm install --save-dev style-loader css-loader
-```
-
-* 配置css-loader
-```
-module: {
-    rules: [
-        {
-            test: /\.css$/,
-            use: [
-                'style-loader',
-                'css-loader'
-            ]
-        },
-```
-
-* 此时效果  
-webpack打包报错，因为css中引用了图片
-
-##### 7、配置file-loader
-* 安装file-loader
-```
-npm install --save-dev file-loader
-```
-
-* 在rules中配置file-loader
-```
-{
-    test: /\.(png|svg|jpg|gif)$/,
-    use: [
-        'file-loader'
-    ]
-}
-```
-
-done
-
-## 其他方案（未详细研究）
+## 其他方案
 ##### 如果某个jquery插件连npm都没上，只能通过script标签来引用它，并且它里面用了jQuery全局变量
 ==> 采用expose-loader插件，将指定js模块export的变量声明为全局变量
 不研究了。。。

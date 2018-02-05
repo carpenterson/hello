@@ -4,7 +4,7 @@
 
 
 
-# 搭建脚手架
+# 搭建工程骨架
 
 ## 1、安装package  
 ```
@@ -39,29 +39,6 @@ webpack.config.js
 * plugins
 * module:{rule:[{}]}
 
-```js
-{
-   test: /\.js$/,
-   exclude: /(node_modules)/,
-   use: {
-       loader: 'babel-loader',
-       options: {
-           presets: ['es2015', 'react']
-       }
-   }
-}
-```
-
-* 除babel的配置外，其余配置和jquery-chosen-webpack工程的一样
-
-* 如何配置babel  
-https://doc.webpack-china.org/loaders/babel-loader/#-  
-https://github.com/thejameskyle/babel-handbook/blob/master/translations/zh-Hans/user-handbook.md
-
-* 最开始参考了spring教程，把其中module.loaders语法（webpack2）改成了module.rules （webpack3）
-https://spring.io/guides/tutorials/react-and-spring-data-rest/
-
-
 ## 4、index.html
 写一个id=root的div
 
@@ -69,7 +46,7 @@ https://spring.io/guides/tutorials/react-and-spring-data-rest/
 写业务代码
 
 
-# 业务代码  
+# 开发业务代码  
 
 ## 1、画静态页面
 + 页面分块，设计好div
