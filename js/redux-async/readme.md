@@ -34,6 +34,6 @@ doSomething().then(()=>{setState()})
 * 把例子完善。componentDidMount是什么时候会触发，只是页面加载的时候触发一次吗，还是后面调用了render方法之后还会再触发？什么是mount？
 * 如果不用redux，只用react怎么实现一样的功能
 
-[阮一峰的Redux教程2]:(http://www.ruanyifeng.com/blog/2016/09/redux_tutorial_part_two_async_operations.html)
-[redux官方教程]:(https://redux.js.org/advanced/async-actions)
-[github上的例子]:(https://github.com/reactjs/redux/tree/master/examples/async)
+[阮一峰的Redux教程2]:http://www.ruanyifeng.com/blog/2016/09/redux_tutorial_part_two_async_operations.html
+[redux官方教程]:https://redux.js.org/advanced/async-actions
+[github上的例子]:https://github.com/reactjs/redux/tree/master/examples/async
