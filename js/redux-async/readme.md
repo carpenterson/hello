@@ -1,6 +1,6 @@
-1. 学习了[阮一峰的Redux教程2]。
-2. [redux官方教程]没有学，看了大纲，阮一峰的教程与之差不多。
-3. [github上的例子]中用了react-redux的API，且代码略多。这个只实现了一个功能来了解异步：在componentDidMount中发一个请求，请求过程中显示Loading...。
+1. 学习了[阮一峰的Redux教程2][]。
+2. [redux官方教程][]没有学，看了大纲，阮一峰的教程与之差不多。
+3. [github上的例子][]中用了react-redux的API，且代码略多。这个只实现了一个功能来了解异步：在componentDidMount中发一个请求，请求过程中显示Loading...。
 
 ## 中间件
 * 中间件的目的：对redux加一些功能，比如打日志。
@@ -31,7 +31,6 @@ doSomething().then(()=>{setState()})
 ```
 
 ## todo
-* 把文档完善一下
 * 把例子完善。componentDidMount是什么时候会触发，只是页面加载的时候触发一次吗，还是后面调用了render方法之后还会再触发？什么是mount？
 * 如果不用redux，只用react怎么实现一样的功能
 
