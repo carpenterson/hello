@@ -1,5 +1,5 @@
 1. 学习了[阮一峰的Redux教程2]。
-2. 实际上还可以学习[redux官方教程]。
+2. [redux官方教程]没有学，看了大纲，阮一峰的教程与之差不多。
 3. [github上的例子]中用了react-redux的API，且代码略多。这个只实现了一个功能来了解异步：在componentDidMount中发一个请求，请求过程中显示Loading...。
 
 ## 中间件
@@ -36,5 +36,5 @@ doSomething().then(()=>{setState()})
 * 如果不用redux，只用react怎么实现一样的功能
 
 [阮一峰的Redux教程2]:(http://www.ruanyifeng.com/blog/2016/09/redux_tutorial_part_two_async_operations.html)
-[redux官方教程]：(https://redux.js.org/advanced/async-actions)
+[redux官方教程]:(https://redux.js.org/advanced/async-actions)
 [github上的例子]:(https://github.com/reactjs/redux/tree/master/examples/async)
