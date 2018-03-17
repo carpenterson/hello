@@ -17,3 +17,5 @@
 #### redux
 * 了解redux的原理
 * 会使用react-redux
+
+### react组件

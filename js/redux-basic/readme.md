@@ -1,6 +1,5 @@
 
-学习阮一峰的Redux教程
-http://www.ruanyifeng.com/blog/2016/09/redux_tutorial_part_one_basic_usages.html
+学习[阮一峰的Redux教程1](http://www.ruanyifeng.com/blog/2016/09/redux_tutorial_part_one_basic_usages.html)
 
 # Redux的关键概念
 * state 数据
@@ -17,4 +16,5 @@ http://www.ruanyifeng.com/blog/2016/09/redux_tutorial_part_one_basic_usages.html
 一个子reducer只更新一个state属性
 
 # 与React的区别？
-一个应用只有一个store
+react：state由组件持有，如果多个组件要共享state，就把state交给父组件持有。调用组件的setState来更新视图。
+redux：state由store持有，一个应用只有一个store。只把react作为显示层，发送action事件来更新视图。

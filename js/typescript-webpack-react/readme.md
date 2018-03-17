@@ -14,8 +14,8 @@ typescript本身就可以翻译JSX
 
 ## 2.通过script标签引入react
 1. 在html中写script标签
-2. 在webpack.config.js的externals中配置"react": "React",   
-效果是：代码中的import xx from 'react'会翻译成对全局变量React的引用  
+2. 在webpack.config.js的externals中配置`"react": "React"`,  
+效果是：代码中的`import xx from 'react'`会翻译成对全局变量React的引用  
 
 # 参考链接
 TypeScript的JSX配置  

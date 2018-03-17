@@ -9,10 +9,10 @@ export class Hello extends React.Component<{}, HelloState>{
     constructor() {
         super({});
 
-        let list: number[] = [1,2,3];
-        let list2: Array<number> = [1,2,3];
+        let list: number[] = [1, 2, 3];
+        let list2: Array<number> = [1, 2, 3];
         let x: any;
-        x = ["Hello",10];
+        x = ["Hello", 10];
 
         this.state = {
             msg: "Hello, Tom!" + x[0].substr(1)
@@ -20,7 +20,7 @@ export class Hello extends React.Component<{}, HelloState>{
         this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClick() {
+    handleClick = () => {
         let isDone: boolean = false;
         let decimal: number = 6;
         let hex: number = 0xf00d;
@@ -34,11 +34,14 @@ export class Hello extends React.Component<{}, HelloState>{
         this.setState({ msg: sentence });
     }
 
+    // label不能设置name属性
+    // https://doc.react-china.org/blog/2017/09/08/dom-attributes-in-react-16.html
     render() {
         return (
             <div>
                 <p>{this.state.msg}</p>
                 <button onClick={this.handleClick}>点击我</button>
+                <label id={'a'}>a</label>
             </div>
         )
     }

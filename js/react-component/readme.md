@@ -7,7 +7,6 @@
 2. 忽略可选依赖项的报错信息：crypt3 fs-ext
 ```
 npm install sinopia -g
-
 ```
 
 ##### 配置sinopia
