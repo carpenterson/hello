@@ -1,8 +1,12 @@
 
-完善异步请求数据的例子。参照[例子](https://github.com/reactjs/redux/tree/master/examples/async)
+完善异步请求数据的例子，当做练习。参照[例子](https://github.com/reactjs/redux/tree/master/examples/async)
+## 实现的目标
 * 可以选择不同的主题
 * 一个主题的内容加载后就缓存起来，下次再切到这个主题不再重新加载
 * 可以刷新内容
+
+## 步骤
+0. 使用了typescript，方便进行类型定义
 
 1. 画静态页面，定义好props：
 * selectedSubreddit, isFetching, items, lastUpdateTime
@@ -21,7 +25,7 @@
 
 6. 把state映射到props上
 
-----
+## 与官方例子的差异点
 没有使用didInvalidate。觉得没必要：
 1. fetchPostsIfNeeded的判断逻辑中只需根据当前state是否包含对应信息就行，包含就不fetch，不包含就fetch；
 2. refresh直接调用fetch就行了，“先置数据失效再fetchPostsIfNeeded”的办法好像太绕了。
