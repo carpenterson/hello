@@ -16,18 +16,14 @@ export default class AsyncApp extends Component {
         this.fetchPosts(this.state.selectedSubreddit);
     }
 
-    selectSubreddit = (subreddit) =>{
-        this.setState({selectedSubreddit: subreddit}); // 先把这个值选上再说
-        this.fetchPostsIfNeeded(subreddit);
-    }
-
-    fetchPostsIfNeeded = (subreddit) =>{
-        // 只会发一次请求，如果这次请求失败，它的信息会是一直loading。
-        if(this.state.postsBySubreddit[subreddit] == null){
+    selectSubreddit = (subreddit) => {
+        this.setState({ selectedSubreddit: subreddit }); // 先把这个值选上再说
+        // setState是异步的，注意后面的代码不能通过this.state.selectedSubreddit来取值
+        if (!this.state.postsBySubreddit[subreddit]) {
             this.fetchPosts(subreddit);
-        }
+        } 
     }
-
+    
     fetchPosts = (subreddit) => {
         let newPosts = {
             ...this.state.postsBySubreddit,
@@ -41,7 +37,11 @@ export default class AsyncApp extends Component {
             .then((json) => {
                 let newPosts = {
                     ...this.state.postsBySubreddit,
-                    [subreddit]: { isFetching: true, posts: json.data.children.map(child => child.data) }
+                    [subreddit]: {
+                        isFetching: false,
+                        posts: json.data.children.map(child => child.data),
+                        lastUpdateTime: new Date(),
+                    }
                 };
                 this.setState({
                     postsBySubreddit: newPosts
@@ -49,12 +49,17 @@ export default class AsyncApp extends Component {
             })
     }
 
+    handleRefreshClick = () => {
+       this.fetchPosts(this.state.selectedSubreddit);
+    }
+
     render() {
         const { postsBySubreddit, selectedSubreddit } = this.state;
-        let defaultInfo = { isFetching: true, posts: [] }; // 为null但是又选择了这个选项，说明马上就要loading了
+        let defaultInfo = { isFetching: true, posts: [], lastUpdateTime: null }; // 为null但是又选择了这个选项，说明马上就要loading了
         let subredditInfo = postsBySubreddit[selectedSubreddit] ? postsBySubreddit[selectedSubreddit] : defaultInfo;
         const isFetching = subredditInfo.isFetching;
         const posts = subredditInfo.posts;
+        const lastUpdateTime = subredditInfo.lastUpdateTime;
         const isEmpty = posts.length === 0;
         const options = ['reactjs', 'frontend'];
         return (
@@ -65,6 +70,18 @@ export default class AsyncApp extends Component {
                         <option key={option} value={option}>{option}</option>
                     ))}
                 </select>
+                <p>
+                    {lastUpdateTime &&
+                        <span>
+                            Last updated at {new Date(lastUpdateTime).toLocaleTimeString()}{' '}
+                        </span>
+                    }
+                    {!isFetching &&
+                        <button onClick={this.handleRefreshClick}>
+                            Refresh
+                        </button>
+                    }
+                </p>
                 {isEmpty
                     ? (isFetching ? <h2>Loading...</h2> : <h2>Empty.</h2>)
                     : <div>
