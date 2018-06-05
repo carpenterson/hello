@@ -1,4 +1,4 @@
-package xzh.nio;
+package xzh.nio.singlethread;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -7,10 +7,14 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * 单线程版本
+ */
 class Reactor implements Runnable {
 	final Selector selector;
 	final ServerSocketChannel serverSocket;
@@ -37,6 +41,7 @@ class Reactor implements Runnable {
 				Iterator<SelectionKey> it = selected.iterator();
 				while (it.hasNext())
 					dispatch((SelectionKey) (it.next()));
+				// 必须clear。否则，SelectionKey一直在这个列表中，会一直进入read()代码（第一次之后，read的结果都是0）
 				selected.clear();
 			}
 		}
@@ -94,8 +99,8 @@ final class Handler implements Runnable {
 	}
 
 	void process() {
-		System.out.println(
-				new Date().toString() + " receive msg:\r\n" + new String(input.array()));
+		System.out.println(new Date().toString() + " receive msg:\r\n"
+				+ new String(Arrays.copyOf(input.array(), input.position())));
 		output.put(new String("HTTP/1.1 200 OK\r\n" + "Context-Type:text/plain\r\n"
 				+ "Content-Length:5\r\n" + "\r\n" + "Hello").getBytes());
 	}
@@ -122,12 +127,13 @@ final class Handler implements Runnable {
 	void read() throws IOException {
 		socket.read(input);
 		if (inputIsComplete()) {
+			System.out.println(socket.getRemoteAddress() + ">> read");
 			process();
 			state = SENDING;
 			// Normally also do first write now
 			sk.interestOps(SelectionKey.OP_WRITE);
 			// 如果不wakeup一下，selector.select()是否会阻塞在等待READ事件？这里是单线程版本，不存在这个问题。
-//			sk.selector().wakeup();
+			// sk.selector().wakeup();
 		}
 	}
 
@@ -135,15 +141,16 @@ final class Handler implements Runnable {
 		output.flip();
 		socket.write(output);
 		if (outputIsComplete()) {
+			System.out.println(socket.getRemoteAddress() + ">> send");
 			// 方式一：继续用这个socket，不关闭
-			state=READING;
-			sk.interestOps(SelectionKey.OP_READ);
+			state = READING;
 			output.clear();
 			input.clear();
-			
+			sk.interestOps(SelectionKey.OP_READ);
+
 			// 方式二：用一次就关闭掉socket
-//			sk.cancel();
-//			socket.close();
+			// sk.cancel();
+			// socket.close();
 		}
 	}
 }
