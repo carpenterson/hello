@@ -13,18 +13,18 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * 单线程版本
+ * 单线程版本。这里把所有的类放到一个文件中。
  */
-class Reactor implements Runnable {
+class Reactor implements Runnable { // 没有public修饰就是包访问权限
 	final Selector selector;
 	final ServerSocketChannel serverSocket;
-
+	
 	public static void main(String[] args) throws IOException {
 		new Thread(new Reactor(8000)).start();
 	}
-
+	
 	Reactor(int port) throws IOException {
-		// 这一个selector负责捕获所有的事件：Accept,Read,Write
+		// 这一个selector负责监听所有的事件：Accept,Read,Write
 		selector = Selector.open();
 		serverSocket = ServerSocketChannel.open();
 		serverSocket.socket().bind(new InetSocketAddress(port));
@@ -72,7 +72,7 @@ class Reactor implements Runnable {
 	}
 }
 
-final class Handler implements Runnable {
+final class Handler implements Runnable { //同一个java文件中可以定义多个类，只能有一个public类
 	final SocketChannel socket;
 	final SelectionKey sk;
 	ByteBuffer input = ByteBuffer.allocate(2048);
