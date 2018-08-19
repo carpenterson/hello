@@ -5,6 +5,7 @@
 * SSO: Single Sign-On 单点登录
 * CAS: Central Authentication Service 集中式认证服务
 * OAuth: Open Authorization 开放授权
+* RFC: Request For Comments 征求意见稿，记录互联网规范、协议、过程等的标准文件
 
 ## SSO
 
@@ -16,15 +17,16 @@ SSO的需求由来已久。在web应用中，有基于cookie实现的单点登�
 
 ## CAS
 
-[官网](https://apereo.github.io/cas/5.3.x/index.html)
-[流程图](https://apereo.github.io/cas/5.3.x/protocol/CAS-Protocol.html)
-[协议内容](https://apereo.github.io/cas/5.3.x/protocol/CAS-Protocol-Specification.html) 
+* [官网](https://apereo.github.io/cas/5.3.x/index.html)
+* [流程图](https://apereo.github.io/cas/5.3.x/protocol/CAS-Protocol.html)
+* [协议内容](https://apereo.github.io/cas/5.3.x/protocol/CAS-Protocol-Specification.html) 
 
 ### CAS使用场景
 
 CAS是SSO的一种实现，使用的场景主要是同一个公司内的各个系统之间通过CAS实现单点登录。
 
 ### CAS历史
+
 1. 由耶鲁大学研发出来的一套系统。
 2. 2004年，成为Java in Administraon Special Interest Group(JASIG)的项目，由"Yale CAS"成为"Jasig CAS"。
 3. 2012年， Jasig和Sakai基金会合并为Apereo基金会。
@@ -34,9 +36,9 @@ CAS是SSO的一种实现，使用的场景主要是同一个公司内的各个�
 
 OAuth也可以算是一种SSO实现，场景是大平台把API开放给第三方应用。
 
-[官网](https://oauth.net/2/)
-[OAuth2.0的授权码模式流程图](https://tools.ietf.org/html/rfc6749#section-4.1)
-[OAUth2.0协议内容](https://tools.ietf.org/html/rfc6749)
+* [官网](https://oauth.net/2/)
+* [OAuth2.0的授权码模式流程图](https://tools.ietf.org/html/rfc6749#section-4.1)
+* [OAUth2.0协议内容](https://tools.ietf.org/html/rfc6749)
 
 ### OAuth历史
 
