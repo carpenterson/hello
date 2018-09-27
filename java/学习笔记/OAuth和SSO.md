@@ -19,7 +19,7 @@ SSO的需求由来已久。在web应用中，有基于cookie实现的单点登�
 
 * [官网](https://apereo.github.io/cas/5.3.x/index.html)
 * [流程图](https://apereo.github.io/cas/5.3.x/protocol/CAS-Protocol.html)
-* [协议内容](https://apereo.github.io/cas/5.3.x/protocol/CAS-Protocol-Specification.html) 
+* [协议内容](https://apereo.github.io/cas/5.3.x/protocol/CAS-Protocol-Specification.html)
 
 ### CAS使用场景
 
@@ -44,4 +44,4 @@ OAuth也可以算是一种SSO实现，场景是大平台把API开放给第三方
 
 1. 2006年11月，Twitter和Ma.gnolia的开发人员讨论，认为没有完成API访问委托的开放标准
 2. 2010年4月，OAuth 1.0协议发表为RFC 5849，一个非正式RFC
-3. 2012年10月，OAuth 2.0协议发布 
+3. 2012年10月，OAuth 2.0协议发布
