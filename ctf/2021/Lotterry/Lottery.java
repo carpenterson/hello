@@ -2,6 +2,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.codec.binary.Hex;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -15,113 +16,135 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
+/**
+ *
+ */
 public class Lottery {
-    static byte[] coin75;
     static RestTemplate template = new RestTemplate();
-
-    static {
-        // 75分的加密串，取末尾的32字节
-        String enc = "KSeI14LMMJsSVtO8CpDwvgeT9eG9rMa0IDGforS6ATpUuL8+16kNrCMlTuAslg7LszQrPsL3O6+aHkaPcdSTgzWXNqWF32P8Twug9uIVyOezSIIAG2XB76GGJggf4UuiDudyuXsa34qAZZjh8EApuMmVQNhyaLlSm0mJce6DJtE=";
-        byte[] encBytes = Base64.getDecoder().decode(enc);
-        coin75 = Arrays.copyOfRange(encBytes, 96, 128);
-    }
+    static String urlRoot = "http://127.0.0.1:8082";
 
     public static void main(String[] args) throws Exception {
+        // 注册一个幸运用户
+        String theLuckyOne = randomName();
+        String uuid = register(theLuckyOne);
+        String apiToken = login(theLuckyOne);
+        String enc = buy(apiToken);
+        byte[] encBytes = Base64.getDecoder().decode(enc);
+        byte[] userId = Arrays.copyOfRange(encBytes, 32, 96);
+        int userCoin = 300;
+        System.out.println("幸运用户：" + theLuckyOne);
 
-        // 注册
-        String registryUrl = "http://52.149.144.45:8080/user/register";
-        RestTemplate template = new RestTemplate();
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String prefix = "xzh";
+        // 随机注册一批用户，并买3张彩票，用彩票的前64字节（包含彩票id）
+        int count = 0;
+        while (userCoin < 999) {
+            String rName = randomName();
+            register(rName);
+            String rApiToken = login(rName);
+
+            for (int i = 0; i < 3; i++) {
+                String rEnc = buy(rApiToken);
+                byte[] rEncBytes = Base64.getDecoder().decode(rEnc);
+                byte[] rLotteryId = Arrays.copyOfRange(rEncBytes, 0, 64);
+                byte[] rCoin = Arrays.copyOfRange(rEncBytes, 96, 128);
+                charge(uuid, apiToken, rLotteryId, userId, rCoin);
+                count++;
+            }
+            userCoin = getUserCoin(apiToken);
+            System.out.println("兑换彩票数量：" + count + "\t当前Coin：" + userCoin);
+        }
+
+        getFlag(apiToken);
+    }
+
+    private static int getUserCoin(String apiToken) throws UnsupportedEncodingException {
+        String url = urlRoot + "/user/info?api_token=" + URLEncoder.encode(apiToken, "UTF-8");
+        ResponseEntity<String> response = template.exchange(url, HttpMethod.GET, null, String.class);
+        JSONObject regResult = JSONObject.parseObject(response.getBody());
+        return regResult.getJSONObject("user").getInteger("coin");
+    }
+
+    static private String randomName() {
         SecureRandom random = new SecureRandom();
         byte[] randomBytes = new byte[16];
         random.nextBytes(randomBytes);
-        String name = prefix + Hex.encodeHexString(randomBytes);
+        String name = Hex.encodeHexString(randomBytes);
+        return name;
+    }
+
+    private static String register(String name) {
+        String registryUrl = urlRoot + "/user/register";
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("username", name);
         params.add("password", name);
-        System.out.println("注册用户：\t" + name);
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, null);
         ResponseEntity<String> regResponse = template.postForEntity(registryUrl, httpEntity, String.class);
         JSONObject regResult = JSONObject.parseObject(regResponse.getBody());
         String uuid = regResult.getJSONObject("user").getString("uuid");
-        System.out.println("uuid\t" + uuid);
+        return uuid;
+    }
 
-        // 登录
-        String loginUrl = "http://52.149.144.45:8080/user/login";
+    private static String login(String name) {
+        String loginUrl = urlRoot + "/user/login";
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("username", name);
+        params.add("password", name);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, null);
         ResponseEntity<String> loginResponse = template.postForEntity(loginUrl, httpEntity, String.class);
         JSONObject loginResult = JSONObject.parseObject(loginResponse.getBody());
         String apiToken = loginResult.getJSONObject("user").getString("api_token");
-        System.out.println("api_token\t" + apiToken);
+        return apiToken;
+    }
 
-        // 买彩票
-        String buyUrl = "http://52.149.144.45:8080/lottery/buy";
-        params.clear();
+    private static String buy(String apiToken) {
+        String buyUrl = urlRoot + "/lottery/buy";
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("api_token", apiToken);
         HttpHeaders headers = new HttpHeaders();
         List<String> cookies = new ArrayList<>();
         cookies.add("api_token=" + apiToken);
         headers.put(HttpHeaders.COOKIE, cookies);
-        httpEntity = new HttpEntity<>(params, headers);
+        HttpEntity httpEntity = new HttpEntity<>(params, headers);
         ResponseEntity<String> buyResponse = template.postForEntity(buyUrl, httpEntity, String.class);
         JSONObject buyResult = JSONObject.parseObject(buyResponse.getBody());
         String enc = buyResult.getString("enc");
-        System.out.println("enc:\t" +  enc);
-        byte[] encBytes = Base64.getDecoder().decode(enc);
-        byte[] lotteryId = Arrays.copyOfRange(encBytes, 0, 64);
-        byte[] userId = Arrays.copyOfRange(encBytes, 64, 96);
-
-        ResponseEntity<String> buyResponse2 = template.postForEntity(buyUrl, httpEntity, String.class);
-        JSONObject buyResult2 = JSONObject.parseObject(buyResponse2.getBody());
-        String enc2 = buyResult2.getString("enc");
-        System.out.println("enc2:\t" +  enc2);
-        byte[] encBytes2 = Base64.getDecoder().decode(enc2);
-        byte[] lotteryId2 = Arrays.copyOfRange(encBytes2, 0, 64);
-
-        ResponseEntity<String> buyResponse3 = template.postForEntity(buyUrl, httpEntity, String.class);
-        JSONObject buyResult3 = JSONObject.parseObject(buyResponse2.getBody());
-        String enc3 = buyResult3.getString("enc");
-        System.out.println("enc3:\t" +  enc3);
-        byte[] encBytes3 = Base64.getDecoder().decode(enc3);
-        byte[] lotteryId3 = Arrays.copyOfRange(encBytes3, 0, 64);
-
-        charge(uuid, apiToken, lotteryId, userId, coin75);
-        charge(uuid, apiToken, lotteryId2, userId, coin75);
-        charge(uuid, apiToken, lotteryId3, userId, coin75);
-
+        return enc;
     }
 
-    private static void charge(String uuid, String apiToken, byte[] lotteryId, byte[] userId, byte[] coin) throws UnsupportedEncodingException {
-        String chargeUrl = "http://52.149.144.45:8080/lottery/charge";
-
-        byte[]  encBytes  = new byte[128];
-        System.arraycopy(lotteryId,0, encBytes,  0, 64);
-        System.arraycopy(userId,0, encBytes, 64, 32);
-        System.arraycopy(coin,0, encBytes,  96, 32);
+    private static void charge(String uuid, String apiToken, byte[] lotteryId, byte[] userId, byte[] coin) {
+        byte[] encBytes = new byte[160];
+        System.arraycopy(lotteryId, 0, encBytes, 0, 64);
+        System.arraycopy(userId, 0, encBytes, 64, 64);
+        System.arraycopy(coin, 0, encBytes, 128, 32);
         String enc = Base64.getEncoder().encodeToString(encBytes);
-        System.out.println("拼enc:\t"  + enc);
+        // getLotteryIfo(enc); // 能解开说明是合法的
+        charge(enc, apiToken, uuid);
+    }
 
-        String infoUrl = "http://52.149.144.45:8080/lottery/info";
-
+    private static void charge(String enc, String apiToken, String uuid) {
+        String chargeUrl = urlRoot + "/lottery/charge";
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("enc", enc);
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, null);
-
-        ResponseEntity<String> infoResponse = template.postForEntity(infoUrl, httpEntity, String.class);
-        System.out.println(infoResponse.getBody());
-        JSONObject infoResult = JSONObject.parseObject(infoResponse.getBody());
-        uuid = infoResult.getJSONObject("info").getString("user");
-
         params.add("user", uuid);
         HttpHeaders headers = new HttpHeaders();
         List<String> cookies = new ArrayList<>();
         cookies.add("api_token=" + apiToken);
         headers.put(HttpHeaders.COOKIE, cookies);
-        System.out.println(URLEncoder.encode(enc, "UTF-8"));
-//        ResponseEntity<String> chargeResponse = template.postForEntity(chargeUrl, httpEntity, String.class);
-//        System.out.println(chargeResponse.getStatusCode());
-//        System.out.println(chargeResponse.getBody());
-
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
+        ResponseEntity<String> chargeResponse = template.postForEntity(chargeUrl, httpEntity, String.class);
     }
 
+    private static void getLotteryIfo(String enc) {
+        String infoUrl = urlRoot + "/lottery/info";
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("enc", enc);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, null);
+        ResponseEntity<String> infoResponse = template.postForEntity(infoUrl, httpEntity, String.class);
+        System.out.println("彩票信息：" + infoResponse.getBody());
+    }
 
+    private static void getFlag(String apiToken) throws UnsupportedEncodingException {
+        String url = urlRoot + "/flag?api_token=" + URLEncoder.encode(apiToken, "UTF-8");
+        ResponseEntity<String> response = template.exchange(url, HttpMethod.POST, null, String.class);
+        System.out.println(response.getBody());
+    }
 }
